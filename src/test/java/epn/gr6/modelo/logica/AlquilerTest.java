@@ -68,4 +68,5 @@ public class AlquilerTest {
         assertEquals(100, cliente.getPuntosPorFidelidad());
     }
 
+
 }
