@@ -30,7 +30,7 @@ public class AlquilerTest {
 
         cliente.alquilar(codigosEjemplares,3,seUsanPuntosDeFidelidad, fechaAlquiler);
         Alquiler alquiler = cliente.getUltimoAlquiler();
-        assertEquals(10, alquiler.getPrecio());
+        assertEquals(10, alquiler.getPrecioTotal());
         assertEquals(30,cliente.getPuntosPorFidelidad());
     }
 
@@ -45,7 +45,7 @@ public class AlquilerTest {
 
         cliente.alquilar(codigosEjemplares,3,false,fechaAlquiler);
         Alquiler alquiler = cliente.getUltimoAlquiler();
-        assertEquals(11, alquiler.getPrecio());
+        assertEquals(11, alquiler.getPrecioTotal());
     }
 
 
