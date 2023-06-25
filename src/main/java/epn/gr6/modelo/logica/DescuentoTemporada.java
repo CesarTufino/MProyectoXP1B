@@ -1,5 +1,8 @@
 package epn.gr6.modelo.logica;
 
+import epn.gr6.modelo.persistencia.PersistenciaCliente;
+import epn.gr6.modelo.persistencia.PersistenciaDescuentoTemporada;
+
 import javax.persistence.*;
 import java.util.Calendar;
 
@@ -30,6 +33,12 @@ public class DescuentoTemporada {
         this.fechaFInTemporada = fechaFInTemporada;
         this.porcentajeDescuento = porcentajeDescuento;
     }
+
+    public DescuentoTemporada buscarDescuento(String codigoDescuento) {
+        DescuentoTemporada descuentoTemporada = PersistenciaDescuentoTemporada.consultarDescuento(codigoDescuento);
+        return descuentoTemporada;
+    }
+
 
     public String getCodigoDescuento() {
         return codigoDescuento;

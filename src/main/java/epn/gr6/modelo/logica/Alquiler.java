@@ -37,6 +37,14 @@ public class Alquiler {
         this.ejemplares = ejemplares;
     }
 
+    public Alquiler(long numeroAlquiler, int diasDeAlquiler, double precioTotal, Cliente cliente) {
+        this.numeroAlquiler = numeroAlquiler;
+        this.diasDeAlquiler = diasDeAlquiler;
+        this.precioTotal = precioTotal;
+        this.cliente = cliente;
+        this.ejemplares = ejemplares;
+    }
+
     public Long getNumeroAlquiler() {
         return numeroAlquiler;
     }

@@ -1,5 +1,8 @@
 package epn.gr6.modelo.logica;
 
+import epn.gr6.modelo.persistencia.PersistenciaCliente;
+import epn.gr6.modelo.persistencia.PersistenciaEjemplar;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,8 @@ public class Ejemplar {
         this.pelicula = pelicula;
     }
 
+
+
     public String getCodigoEjemplar() {
         return codigoEjemplar;
     }
@@ -44,6 +49,7 @@ public class Ejemplar {
 
     public void setEstadoDisponibilidad(Boolean estadoDisponibilidad) {
         this.estadoDisponibilidad = estadoDisponibilidad;
+
     }
 
     public double getCostoPorDia() {
@@ -69,4 +75,10 @@ public class Ejemplar {
     public void setAlquileres(List<Alquiler> alquileres) {
         this.alquileres = alquileres;
     }
+
+    public boolean verificarPercance() {
+        Boolean estado = false;
+        return estado;
+    }
+
 }
