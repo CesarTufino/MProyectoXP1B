@@ -89,7 +89,7 @@ public class Cliente {
             GestorAlquiler.sumarPuntajeAlquiler(cliente);
         }else {
             //CUARTA HISTORIA
-            System.out.println("Cantidad de puntos maximos");
+            System.out.println("\n Cantidad de puntos maximos");
         }
 
         System.out.println(precioTotal);
@@ -131,13 +131,13 @@ public class Cliente {
         PersistenciaAlquiler.registrarAlquiler(alquiler);
     }
 
-    public void devolver(List<Ejemplar> ejemplares, Cliente cliente) {
+    public void devolver(List<Ejemplar> ejemplares, Cliente cliente,boolean estado) {
 
         for(Ejemplar ejemplar: ejemplares){
-            if(ejemplar.verificarPercance()){
+            if(ejemplar.verificarPercance(estado) == true){
                 cliente.setPuntosPorFidelidad(0);
                 PersistenciaCliente.actualizarCliente(cliente);
-                System.out.println("con percance");
+                System.out.println("El ejemplar con código " + ejemplar.getCodigoEjemplar() + " tiene un percance.");
             }
             ejemplar.setEstadoDisponibilidad(true);
             PersistenciaEjemplar.actualizarEjemplar(ejemplar);
