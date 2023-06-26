@@ -7,7 +7,7 @@
     <property name="connection.url">jdbc:postgresql://localhost:5432/MultipelisEjemplo</property>
     <property name="connection.driver_class">org.postgresql.Driver</property>
     <property name="connection.username">postgres</property>
-    <property name="connection.password">Passw0rd</property>
+    <property name="connection.password">1234</property>
     <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping class="epn.gr6.modelo.logica.Cliente"/>
     <mapping class="epn.gr6.modelo.logica.Alquiler"/>
