@@ -3,7 +3,7 @@ package epn.gr6.modelo.logica;
 import java.util.List;
 
 public class GestorAlquiler {
-    private GestorCliente gestorCliente;
+    private final GestorCliente gestorCliente;
 
     public GestorAlquiler(GestorCliente gestorCliente) {
         this.gestorCliente = gestorCliente;
@@ -34,7 +34,7 @@ public class GestorAlquiler {
     }
 
     private static void aumentarPuntosFidelidad(List<Ejemplar> ejemplares, Cliente cliente) {
-        for (Ejemplar ejemplar: ejemplares){
+        for (Ejemplar ignored : ejemplares){
             if (cliente.getPuntosPorFidelidad() < 100) {
                 GestorAlquiler.sumarPuntajeAlquiler(cliente);
             } else {
@@ -68,10 +68,7 @@ public class GestorAlquiler {
     }
 
     private boolean verificarPuntosFidelidadSuficientes(int puntosPorFidelidad) {
-        if (puntosPorFidelidad < 50) {
-            return false;
-        }
-        return true;
+        return puntosPorFidelidad >= 50;
     }
 
     public void devolver(List<Ejemplar> ejemplares, Cliente cliente, boolean estado) {

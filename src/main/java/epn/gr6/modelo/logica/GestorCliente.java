@@ -13,7 +13,7 @@ public class GestorCliente {
         this.clientes = clientes;
     }
 
-    public static List<Cliente> obtenerClientesMayorPuntaje(){
+    public List<Cliente> obtenerClientesMayorPuntaje(){
         Collections.sort(clientes, new Comparador());
         for (int i=3; i<clientes.size();i++){
                 clientes.remove(i);

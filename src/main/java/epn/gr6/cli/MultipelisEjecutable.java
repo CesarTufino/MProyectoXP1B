@@ -16,12 +16,10 @@ public class MultipelisEjecutable {
     private static final String OPCION_DEVOLVER = "2";
     private static final String OPCION_REGISTRAR_CLIENTE = "3";
 
-    private static List<Cliente> clientes;
 
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)  {
         Logger.getLogger("org.hibernate").setLevel(Level.OFF);
-        clientes = PersistenciaCliente.consultarClientes();
+        List<Cliente> clientes = PersistenciaCliente.consultarClientes();
 
         Scanner scanner = new Scanner(System.in);
         GestorCliente gestorCliente = new GestorCliente(clientes);
@@ -113,7 +111,7 @@ public class MultipelisEjecutable {
                 if (codigoEjemplar.equalsIgnoreCase("q")) {
                     if (ejemplares.isEmpty()) {
                         System.out.println("Debe ingresar al menos un código de ejemplar.");
-                        continue; // Volver a solicitar el código del ejemplar
+                        //Volver a solicitar el código del ejemplar
                     } else {
                         seguirAgregando = false;
                     }
@@ -137,11 +135,12 @@ public class MultipelisEjecutable {
                 opcionAlquiler = scanner.nextInt();
                 scanner.nextLine(); // Consumir el salto de línea
                 Alquiler alquiler;
+                int diasAlquiler;
 
                 switch (opcionAlquiler) {
                     case 1:
                         System.out.print("Ingrese la cantidad de días de alquiler: ");
-                        int diasAlquiler = scanner.nextInt();
+                        diasAlquiler = scanner.nextInt();
                         scanner.nextLine(); // Consumir el salto de línea
                         alquiler = gestorAlquiler.alquilar(diasAlquiler, ejemplares, cliente);
                         PersistenciaAlquiler.registrarAlquiler(alquiler);
