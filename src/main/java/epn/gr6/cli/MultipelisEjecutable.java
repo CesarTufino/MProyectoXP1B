@@ -1,6 +1,5 @@
 package epn.gr6.cli;
 
-
 import epn.gr6.modelo.logica.*;
 import epn.gr6.modelo.persistencia.*;
 
