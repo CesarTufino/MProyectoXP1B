@@ -17,29 +17,15 @@ public class MultipelisEjecutable {
     private static final String OPCION_REGISTRAR_CLIENTE = "3";
 
     private static List<Cliente> clientes;
-    private static List<Ejemplar> ejemplares;
-
-    private static List<Alquiler> alquileres;
-
-    private static List<Pelicula> peliculas;
-    private static List<DescuentoTemporada> descuentos;
 
 
     public static void main(String[] args) throws Exception {
         Logger.getLogger("org.hibernate").setLevel(Level.OFF);
         clientes = PersistenciaCliente.consultarClientes();
-        ejemplares = PersistenciaEjemplar.consultarEjemplares();
-        peliculas = PersistenciaPelicula.consultarPeliculas();
-        alquileres = PersistenciaAlquiler.consultarAlquileres();
-        descuentos = PersistenciaDescuentoTemporada.consultarDescuentos();
 
         Scanner scanner = new Scanner(System.in);
         GestorCliente gestorCliente = new GestorCliente(clientes);
-        Cliente cliente = new Cliente();
         GestorEjemplar gestorEjemplar = new GestorEjemplar();
-
-
-
 
         String opcion;
         do {
@@ -181,20 +167,6 @@ public class MultipelisEjecutable {
                         System.out.println("Puntos de fidelidad del cliente: " + cliente.getPuntosPorFidelidad());
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
-                        /*
-                    case 4:
-                        System.out.print("Ingrese la cantidad de días de alquiler: ");
-                        diasAlquiler = scanner.nextInt();
-                        scanner.nextLine(); // Consumir el salto de línea
-                        alquiler = gestorAlquiler.alquilarExclusivo(diasAlquiler, ejemplares, cliente);
-                        PersistenciaAlquiler.registrarAlquiler(alquiler);
-                        PersistenciaCliente.actualizarCliente(cliente);
-                        for(Ejemplar ejemplar: ejemplares){
-                            PersistenciaEjemplar.actualizarEjemplar(ejemplar);
-                        }
-                        System.out.println("Alquiler por Temporada realizado exitosamente.");
-                        opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
-                        break;*/
                     case 3:
                         System.out.println("Volviendo al Menú Principal...");
                         break;

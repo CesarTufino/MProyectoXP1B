@@ -11,10 +11,29 @@ public class GestorAlquiler {
 
     public Alquiler alquilar(int diasAlquiler, List<Ejemplar> ejemplares, Cliente cliente) {
         double precioTotal = calcularPrecioTotal(ejemplares, diasAlquiler);
+        precioTotal = calcularPrecioDescuentoExlusivo(cliente, precioTotal);
+        cambiarDisponibilidadEjemplares(ejemplares);
+        aumentarPuntosFidelidad(ejemplares, cliente);
+        precioTotal = redondearPrecioDosDecimales(precioTotal);
+        System.out.println("$" + precioTotal);
+        return new Alquiler(diasAlquiler, precioTotal, cliente, ejemplares);
+    }
+
+    private static double redondearPrecioDosDecimales(double precioTotal) {
+        precioTotal = precioTotal *100;
+        precioTotal = Math.round(precioTotal);
+        precioTotal = precioTotal /100;
+        return precioTotal;
+    }
+
+    private double calcularPrecioDescuentoExlusivo(Cliente cliente, double precioTotal) {
         if (verificarPosicionDelCliente(cliente)) {
             precioTotal = precioTotal * (1 - 0.1);
         }
-        cambiarDisponibilidadEjemplares(ejemplares);
+        return precioTotal;
+    }
+
+    private static void aumentarPuntosFidelidad(List<Ejemplar> ejemplares, Cliente cliente) {
         for (Ejemplar ejemplar: ejemplares){
             if (cliente.getPuntosPorFidelidad() < 100) {
                 GestorAlquiler.sumarPuntajeAlquiler(cliente);
@@ -23,11 +42,6 @@ public class GestorAlquiler {
                 break;
             }
         }
-        precioTotal = precioTotal*100;
-        precioTotal = Math.round(precioTotal);
-        precioTotal = precioTotal/100;
-        System.out.println("$" + precioTotal);
-        return new Alquiler(diasAlquiler, precioTotal, cliente, ejemplares);
     }
 
     public Alquiler alquilarFidelidad(int diasAlquiler, List<Ejemplar> ejemplares, Cliente cliente) {
@@ -35,38 +49,13 @@ public class GestorAlquiler {
         if (verificarPuntosFidelidadSuficientes(cliente.getPuntosPorFidelidad())) {
             precioTotal = GestorAlquiler.aplicarDescuento(precioTotal, cliente);
         }
-        if (verificarPosicionDelCliente(cliente)) {
-            precioTotal = precioTotal * (1 - 0.1);
-        }
+        precioTotal = calcularPrecioDescuentoExlusivo(cliente, precioTotal);
         cambiarDisponibilidadEjemplares(ejemplares);
-        for (Ejemplar ejemplar: ejemplares){
-            if (cliente.getPuntosPorFidelidad() < 100) {
-                GestorAlquiler.sumarPuntajeAlquiler(cliente);
-            } else {
-                System.out.println("Cantidad de puntos maximos");
-                break;
-            }
-        }
-        precioTotal = precioTotal*100;
-        precioTotal = Math.round(precioTotal);
-        precioTotal = precioTotal/100;
+        aumentarPuntosFidelidad(ejemplares, cliente);
+        precioTotal = redondearPrecioDosDecimales(precioTotal);
         System.out.println("$" + precioTotal);
         return new Alquiler(diasAlquiler, precioTotal, cliente, ejemplares);
     }
-
-    /*
-    public Alquiler alquilarExclusivo(int diasAlquiler, List<Ejemplar> ejemplares, Cliente cliente) {
-        double precioTotal = calcularPrecioTotal(ejemplares, diasAlquiler);
-        cambiarDisponibilidadEjemplares(ejemplares);
-        if (cliente.getPuntosPorFidelidad() < 100) {
-            GestorAlquiler.sumarPuntajeAlquiler(cliente);
-        } else {
-            //CUARTA HISTORIA
-            System.out.println("\n Cantidad de puntos maximos");
-        }
-        System.out.println(precioTotal);
-        return new Alquiler(diasAlquiler, precioTotal, cliente, ejemplares);
-    }*/
 
     public boolean verificarPosicionDelCliente(Cliente cliente) {
         List<Cliente> clientes = gestorCliente.obtenerClientesMayorPuntaje();
