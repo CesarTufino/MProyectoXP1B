@@ -13,7 +13,6 @@
     <mapping class="epn.gr6.modelo.logica.Alquiler"/>
     <mapping class="epn.gr6.modelo.logica.Pelicula"/>
     <mapping class="epn.gr6.modelo.logica.Ejemplar"/>
-    <mapping class="epn.gr6.modelo.logica.DescuentoTemporada"/>
 
     <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
