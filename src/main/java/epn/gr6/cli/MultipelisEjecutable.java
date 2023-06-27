@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 public class MultipelisEjecutable {
 
     private static final String OPCION_SALIR = "0";
-    private static final String OPCION_REGISTRAR_CLIENTE = "1";
-    private static final String OPCION_ALQUILAR = "2";
-    private static final String OPCION_DEVOLVER = "3";
+    private static final String OPCION_ALQUILAR = "1";
+    private static final String OPCION_DEVOLVER = "2";
+    private static final String OPCION_REGISTRAR_CLIENTE = "3";
 
     private static List<Cliente> clientes;
     private static List<Ejemplar> ejemplares;
@@ -69,9 +69,9 @@ public class MultipelisEjecutable {
 
     private static void mostrarMenu() {
         System.out.println("======= MENU PRINCIPAL =======");
-        System.out.println("1. Registrar Cliente");
-        System.out.println("2. Alquilar");
-        System.out.println("3. Devolver");
+        //System.out.println("3. Registrar Cliente");
+        System.out.println("1. Realizar Alquiler");
+        System.out.println("2. Devolver Película");
         System.out.println("0. Salir");
         System.out.println("==============================");
         System.out.print("Selecciona una opción: ");
@@ -112,6 +112,10 @@ public class MultipelisEjecutable {
             System.out.println("Cliente encontrado:");
             System.out.println("Nombre: " + cliente.getNombre());
             System.out.println("Apellido: " + cliente.getApellido());
+            System.out.println("Puntos de Fidelidad: " + cliente.getPuntosPorFidelidad());
+            if (gestorAlquiler.verificarPosicionDelCliente(cliente)){
+                System.out.println("El cliente pertenece al grupo con mayores puntos de fidelidad");
+            }
 
             List<Ejemplar> ejemplares = new ArrayList<>();
             boolean seguirAgregando = true;
@@ -143,8 +147,7 @@ public class MultipelisEjecutable {
                 System.out.println("======= TIPO DE ALQUILER =======");
                 System.out.println("1. Alquiler Normal");
                 System.out.println("2. Alquiler por Fidelidad");
-                System.out.println("3. Alquiler Exclusivo");
-                System.out.println("4. Volver al Menú Principal");
+                System.out.println("3. Volver al Menú Principal");
                 System.out.print("Seleccione una opción: ");
                 opcionAlquiler = scanner.nextInt();
                 scanner.nextLine(); // Consumir el salto de línea
@@ -162,6 +165,7 @@ public class MultipelisEjecutable {
                             PersistenciaEjemplar.actualizarEjemplar(ejemplar);
                         }
                         System.out.println("Alquiler Normal realizado exitosamente.");
+                        System.out.println("Puntos de fidelidad del cliente: " + cliente.getPuntosPorFidelidad());
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
                     case 2:
@@ -175,9 +179,11 @@ public class MultipelisEjecutable {
                         }
                         PersistenciaAlquiler.registrarAlquiler(alquiler);
                         System.out.println("Alquiler por Fidelidad realizado exitosamente.");
+                        System.out.println("Puntos de fidelidad del cliente: " + cliente.getPuntosPorFidelidad());
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
-                    case 3:
+                        /*
+                    case 4:
                         System.out.print("Ingrese la cantidad de días de alquiler: ");
                         diasAlquiler = scanner.nextInt();
                         scanner.nextLine(); // Consumir el salto de línea
@@ -189,8 +195,8 @@ public class MultipelisEjecutable {
                         }
                         System.out.println("Alquiler por Temporada realizado exitosamente.");
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
-                        break;
-                    case 4:
+                        break;*/
+                    case 3:
                         System.out.println("Volviendo al Menú Principal...");
                         break;
                     default:
@@ -219,6 +225,7 @@ public class MultipelisEjecutable {
             System.out.println("Cliente encontrado:");
             System.out.println("Nombre: " + cliente.getNombre());
             System.out.println("Apellido: " + cliente.getApellido());
+            System.out.println();
 
             List<Ejemplar> ejemplares = new ArrayList<>();
             boolean seguirAgregando = true;
@@ -242,16 +249,23 @@ public class MultipelisEjecutable {
 
             if (!ejemplares.isEmpty()) {
                 boolean tienePercance;
+                boolean continuar;
                 do {
-                    System.out.print("¿El ejemplar tiene percance? (s/n): ");
+                    System.out.print("¿Algún ejemplar tuvo un percance? (s/n): ");
                     String opcion = scanner.nextLine();
-                    tienePercance = opcion.equalsIgnoreCase("s") || opcion.equalsIgnoreCase("n");
-                    if (!tienePercance) {
+                    tienePercance = opcion.equalsIgnoreCase("s");
+                    if (!opcion.equalsIgnoreCase("s") && !opcion.equalsIgnoreCase("n")) {
+                        continuar = false;
                         System.out.println("Opción inválida. Intente nuevamente.");
+                    } else{
+                        continuar = true;
                     }
-                } while (!tienePercance);
+                } while (!continuar);
 
                 gestorAlquiler.devolver(ejemplares, cliente, tienePercance);
+                if (tienePercance){
+                    System.out.println("Puntos de fidelidad del cliente: " + cliente.getPuntosPorFidelidad());
+                }
                 PersistenciaCliente.actualizarCliente(cliente);
                 for (Ejemplar ejemplar : ejemplares) {
                     PersistenciaEjemplar.actualizarEjemplar(ejemplar);

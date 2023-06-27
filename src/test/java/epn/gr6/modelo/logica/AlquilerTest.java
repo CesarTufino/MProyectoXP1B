@@ -23,11 +23,17 @@ public class AlquilerTest {
         Cliente cliente2 = new Cliente("1752445678","Cesar","Tufiño");
         Cliente cliente3 = new Cliente("1754656345","David","Albuja");
         Cliente cliente4 = new Cliente("1723423857","Ismael","Toaquiza");
+
         listaClientes = new ArrayList<>();
         listaClientes.add(cliente1);
         listaClientes.add(cliente2);
         listaClientes.add(cliente3);
         listaClientes.add(cliente4);
+
+        listaClientes.get(0).setPuntosPorFidelidad(100);
+        listaClientes.get(1).setPuntosPorFidelidad(95);
+        listaClientes.get(2).setPuntosPorFidelidad(60);
+        listaClientes.get(3).setPuntosPorFidelidad(70);
 
         gestorCliente = new GestorCliente(listaClientes);
 
@@ -45,37 +51,31 @@ public class AlquilerTest {
 
     @Test
     public void given_new_cliente_when_client_rents_then_increase_loyalty_points() {
-        Cliente clienteQueAlquila = listaClientes.get(0);
+        Cliente clienteQueAlquila = listaClientes.get(1);
         gestorAlquiler.alquilar(3,ejemplaresAlquilados,clienteQueAlquila);
-        assertEquals(5, clienteQueAlquila.getPuntosPorFidelidad());
+        assertEquals(100, clienteQueAlquila.getPuntosPorFidelidad());
     }
 
     @Test
     public void given_loyalty_points_when_client_uses_loyalty_points_then_decrease_loyalty_points_and_give_discount() {
-        listaClientes.get(0).setPuntosPorFidelidad(100);
-        Cliente clienteQueAlquila = listaClientes.get(0);
+        Cliente clienteQueAlquila = listaClientes.get(2);
         Alquiler alquiler = gestorAlquiler.alquilarFidelidad(1,ejemplaresAlquilados,clienteQueAlquila);
-        assertEquals(9.5, alquiler.getPrecioTotal(),0);
-        assertEquals(55, clienteQueAlquila.getPuntosPorFidelidad());
+        assertEquals(8, alquiler.getPrecioTotal(),0);
+        assertEquals(15, clienteQueAlquila.getPuntosPorFidelidad());
     }
 
     @Test
-    public void given_best_client_when_client_rents_in_season_then_give_discount() {
-        listaClientes.get(0).setPuntosPorFidelidad(100);
-        listaClientes.get(1).setPuntosPorFidelidad(95);
-        listaClientes.get(2).setPuntosPorFidelidad(60);
-        listaClientes.get(3).setPuntosPorFidelidad(70);
+    public void given_best_client_when_client_rents_then_give_discount() {
         Cliente clienteQueAlquila = listaClientes.get(3);
-        Alquiler alquiler = gestorAlquiler.alquilarExclusivo(1,ejemplaresAlquilados,clienteQueAlquila);
+        Alquiler alquiler = gestorAlquiler.alquilar(1,ejemplaresAlquilados,clienteQueAlquila);
         assertEquals(9, alquiler.getPrecioTotal(),0);
     }
 
 
     @Test
     public void given_client_with_max_loyalty_points_when_client_rents_then_not_increase_loyalty_points() {
-        listaClientes.get(0).setPuntosPorFidelidad(100);
         Cliente clienteQueAlquila = listaClientes.get(0);
-        gestorAlquiler.alquilarExclusivo(1,ejemplaresAlquilados,clienteQueAlquila);
+        gestorAlquiler.alquilar(1,ejemplaresAlquilados,clienteQueAlquila);
         assertEquals(100, clienteQueAlquila .getPuntosPorFidelidad());
     }
 
