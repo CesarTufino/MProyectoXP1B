@@ -1,9 +1,14 @@
-package epn.gr6.modelo.logica;
+package epn.gr6.cli;
 
+
+import epn.gr6.modelo.logica.*;
+import epn.gr6.modelo.persistencia.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MultipelisEjecutable {
 
@@ -12,11 +17,30 @@ public class MultipelisEjecutable {
     private static final String OPCION_ALQUILAR = "2";
     private static final String OPCION_DEVOLVER = "3";
 
+    private static List<Cliente> clientes;
+    private static List<Ejemplar> ejemplares;
+
+    private static List<Alquiler> alquileres;
+
+    private static List<Pelicula> peliculas;
+    private static List<DescuentoTemporada> descuentos;
+
+
     public static void main(String[] args) throws Exception {
+        Logger.getLogger("org.hibernate").setLevel(Level.OFF);
+        clientes = PersistenciaCliente.consultarClientes();
+        ejemplares = PersistenciaEjemplar.consultarEjemplares();
+        peliculas = PersistenciaPelicula.consultarPeliculas();
+        alquileres = PersistenciaAlquiler.consultarAlquileres();
+        descuentos = PersistenciaDescuentoTemporada.consultarDescuentos();
+
         Scanner scanner = new Scanner(System.in);
-        GestorCliente gestorCliente = new GestorCliente();
+        GestorCliente gestorCliente = new GestorCliente(clientes);
         Cliente cliente = new Cliente();
         GestorEjemplar gestorEjemplar = new GestorEjemplar();
+
+
+
 
         String opcion;
         do {
@@ -68,12 +92,16 @@ public class MultipelisEjecutable {
         if (cedula.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
             System.out.println("Error: Todos los campos deben ser completados.");
         } else {
-            gestorCliente.registrarCliente(cedula, nombre, apellido);
+            Cliente cliente = gestorCliente.registrarCliente(cedula, nombre, apellido);
+            PersistenciaCliente.registrarCliente(cedula, cliente);
             System.out.println("¡Cliente registrado exitosamente!");
         }
     }
 
     private static void realizarAlquiler(GestorCliente gestorCliente, GestorEjemplar gestorEjemplar, Scanner scanner) {
+
+        GestorAlquiler gestorAlquiler = new GestorAlquiler(gestorCliente);
+
         System.out.println("======= REALIZAR ALQUILER =======");
 
         System.out.print("Ingrese la cédula del cliente: ");
@@ -115,18 +143,24 @@ public class MultipelisEjecutable {
                 System.out.println("======= TIPO DE ALQUILER =======");
                 System.out.println("1. Alquiler Normal");
                 System.out.println("2. Alquiler por Fidelidad");
-                System.out.println("3. Alquiler por Temporada");
+                System.out.println("3. Alquiler Exclusivo");
                 System.out.println("4. Volver al Menú Principal");
                 System.out.print("Seleccione una opción: ");
                 opcionAlquiler = scanner.nextInt();
                 scanner.nextLine(); // Consumir el salto de línea
+                Alquiler alquiler;
 
                 switch (opcionAlquiler) {
                     case 1:
                         System.out.print("Ingrese la cantidad de días de alquiler: ");
                         int diasAlquiler = scanner.nextInt();
                         scanner.nextLine(); // Consumir el salto de línea
-                        cliente.alquilar(diasAlquiler, ejemplares, cliente);
+                        alquiler = gestorAlquiler.alquilar(diasAlquiler, ejemplares, cliente);
+                        PersistenciaAlquiler.registrarAlquiler(alquiler);
+                        PersistenciaCliente.actualizarCliente(cliente);
+                        for(Ejemplar ejemplar: ejemplares){
+                            PersistenciaEjemplar.actualizarEjemplar(ejemplar);
+                        }
                         System.out.println("Alquiler Normal realizado exitosamente.");
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
@@ -134,17 +168,25 @@ public class MultipelisEjecutable {
                         System.out.print("Ingrese la cantidad de días de alquiler: ");
                         diasAlquiler = scanner.nextInt();
                         scanner.nextLine(); // Consumir el salto de línea
-                        cliente.alquilarFidelidad(diasAlquiler, ejemplares, cliente);
+                        alquiler = gestorAlquiler.alquilarFidelidad(diasAlquiler, ejemplares, cliente);
+                        PersistenciaCliente.actualizarCliente(cliente);
+                        for(Ejemplar ejemplar: ejemplares){
+                            PersistenciaEjemplar.actualizarEjemplar(ejemplar);
+                        }
+                        PersistenciaAlquiler.registrarAlquiler(alquiler);
                         System.out.println("Alquiler por Fidelidad realizado exitosamente.");
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
                     case 3:
-                        System.out.print("Ingrese el código de la temporada: ");
-                        String codigoTemporada = scanner.nextLine();
                         System.out.print("Ingrese la cantidad de días de alquiler: ");
                         diasAlquiler = scanner.nextInt();
                         scanner.nextLine(); // Consumir el salto de línea
-                        cliente.alquilarTemporada(diasAlquiler, ejemplares, cliente, codigoTemporada);
+                        alquiler = gestorAlquiler.alquilarExclusivo(diasAlquiler, ejemplares, cliente);
+                        PersistenciaAlquiler.registrarAlquiler(alquiler);
+                        PersistenciaCliente.actualizarCliente(cliente);
+                        for(Ejemplar ejemplar: ejemplares){
+                            PersistenciaEjemplar.actualizarEjemplar(ejemplar);
+                        }
                         System.out.println("Alquiler por Temporada realizado exitosamente.");
                         opcionAlquiler = 4; // Salir del submenú y volver al Menú Principal
                         break;
@@ -164,6 +206,9 @@ public class MultipelisEjecutable {
     }
 
     private static void realizarDevolucion(GestorCliente gestorCliente, GestorEjemplar gestorEjemplar, Scanner scanner) {
+
+        GestorAlquiler gestorAlquiler = new GestorAlquiler(gestorCliente);
+
         System.out.println("======= DEVOLVER PELÍCULA =======");
 
         System.out.print("Ingrese la cédula del cliente: ");
@@ -206,7 +251,11 @@ public class MultipelisEjecutable {
                     }
                 } while (!tienePercance);
 
-                cliente.devolver(ejemplares, cliente, tienePercance);
+                gestorAlquiler.devolver(ejemplares, cliente, tienePercance);
+                PersistenciaCliente.actualizarCliente(cliente);
+                for (Ejemplar ejemplar : ejemplares) {
+                    PersistenciaEjemplar.actualizarEjemplar(ejemplar);
+                }
                 System.out.println("Devolución realizada exitosamente.");
             } else {
                 System.out.println("No se ingresó ningún código de ejemplar. No se puede realizar la devolución.");

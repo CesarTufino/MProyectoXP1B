@@ -76,10 +76,5 @@ public class Ejemplar {
         this.alquileres = alquileres;
     }
 
-    public boolean verificarPercance(boolean estado) {
-
-
-        return estado;
-    }
 
 }

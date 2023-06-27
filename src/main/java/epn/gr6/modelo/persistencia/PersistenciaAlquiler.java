@@ -3,6 +3,9 @@ package epn.gr6.modelo.persistencia;
 import epn.gr6.modelo.logica.Alquiler;
 import epn.gr6.modelo.logica.Ejemplar;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class PersistenciaAlquiler {
 
@@ -21,6 +24,17 @@ public class PersistenciaAlquiler {
         session.getTransaction().commit();
         session.close();
         return alquiler;
+    }
+
+    public static List<Alquiler> consultarAlquileres() {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        String hql = "FROM Alquiler";
+        Query query = session.createQuery(hql);
+        List<Alquiler> alquileres = query.list();
+        session.getTransaction().commit();
+        session.close();
+        return alquileres;
     }
 
     public static void actualizarAlquiler(Alquiler alquiler) {
